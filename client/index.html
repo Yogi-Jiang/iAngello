@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" href="../vendor/bootstrap/css/bootstrap.min.css">
+    <script src="../vendor/jquery.js"></script>
+    <script src="../vendor/angular.js"></script>
+    <script src="src/angello/Angello.js"></script>
+    <script src="../vendor/angular-route.js"></script>
 </head>
 <body ng-controller="MainCtrl as main">
-    <div class="navbar navbar-fixed-top navbar-default"></div>
+    <div class="navbar navbar-fixed-top navbar-default">
+        <div class="navbar-header">
+            <a href="#/" class="logo navbar-brand">
+                <img src="assets/img/angello.png" alt=""/>
+            </a>
+        </div>
+        <div class="btn-group pull-right" ng-show="true">
+            <a class="btn btn-danger" href="#/">
+                <span class="glyphicon glyphicon-home"></span>
+            </a>
+            <a href="#/users" class="btn btn-danger">
+                <span class="glyphicon glyphicon-user"></span>
+            </a>
+            <a href="#/dashboard" class="btn btn-danger">
+                <span class="glyphicon glyphicon-signal"></span>
+            </a>
+        </div>
+    </div>
     <div ng-view=""></div>
     <div class="modal"></div>
 </body>
