@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="list-area">
+    <div class="list-wrapper">
+        <ul class="list my-repeat-animation"
+                ng-repeat="status in storyboard.statuses">
+            <h3 class="status">{{::status.name}}</h3>
+            <hr />
+            <li class="story"
+                    ng-repeat="story in storyboard.stories
+                    | filter: {status: status.name}"
+                    ng-click="storyboard.setCurrentStory(story)">
+                <article>
+                    <div>
+                        <button class="close" type="button">×</button>
+                        <p class="title">{{story.title}}</p>
+                    </div>
+                    <div class="type-bar {{story.type}}"></div>
+                    <div>
+                        <p>{{story.description}}</p>
+                    </div>
+                </article>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -10,20 +10,20 @@ var myModule = angular.module("Angello",
         //"Angello.Common",
         //"Angello.Dashboard",
         //"Angello.Login",
-        //"Angello.Storyboard",
+        "Angello.Storyboard",
         //"Angello.User",
         //"auth0",
         //"angular-jwt",
         //"angular-storage"
     ]);
 
-//myModule.config(function ($routeProvider) {
-//    $routeProvider
-//        .when("/", {
-//        templateUrl: "src/angello/storyboard/tmpl/storyboard.html",
-//        controller: "StoryboardCtrl",
-//        controllerAs: "storyboard"
-//        })
+myModule.config(function ($routeProvider) {
+    $routeProvider
+        .when("/", {
+        templateUrl: "src/angello/storyboard/tmpl/storyboard.html",
+        controller: "StoryboardCtrl",
+        controllerAs: "storyboard"
+        })
 //        .when("/dashboard", {
 //            templateUrl: "src/angello/dashboard/tmpl/dashboard.html",
 //            controller: "LoginCtrl",
@@ -44,7 +44,7 @@ var myModule = angular.module("Angello",
 //            controller: "StoryboardCtrl",
 //            controllerAs: "storyboard"
 //        })
-//        .otherwise({ redirectTo: "/"});
-//});
+        .otherwise({ redirectTo: "/"});
+});
 
 myModule.controller("MainCtrl", function () {});
