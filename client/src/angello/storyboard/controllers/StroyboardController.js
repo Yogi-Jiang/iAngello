@@ -2,21 +2,21 @@
  * Created by wanjie on 2015/11/17.
  */
 angular.module("Angello.Storyboard")
-    .controller("StoryboardCtrl", function (STORY_TYPES, StoriesModel, $log) {
+    .controller("StoryboardCtrl", function (STORY_TYPES) {//, StoriesModel, $log
         var storyboard = this;
 
         storyboard.currentStory = null;
         storyboard.editedStory = {};
 
-        storyboard.getStories = function () {
-            StoriesModel.all()
-                .then(function (result) {
-                    storyboard.stories = (result !== "null") ? result : {};
-                    $log.debug("RESULT", result);
-                }, function (reason) {
-                    $log.debug("REASON", reason);
-                });
-        };
+        //storyboard.getStories = function () {
+        //    StoriesModel.all()
+        //        .then(function (result) {
+        //            storyboard.stories = (result !== "null") ? result : {};
+        //            $log.debug("RESULT", result);
+        //        }, function (reason) {
+        //            $log.debug("REASON", reason);
+        //        });
+        //};
 
         storyboard.deleteStory = function (storyId) {
             var arr = storyboard.stories;

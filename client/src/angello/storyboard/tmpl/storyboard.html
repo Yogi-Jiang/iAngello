@@ -4,9 +4,11 @@
                 ng-repeat="status in storyboard.statuses">
             <h3 class="status">{{::status.name}}</h3>
             <hr />
-            <li class="story"
+            <li userStory  class="story"
                     ng-repeat="story in storyboard.stories
                     | filter: {status: status.name}"
+                    drag-container="story"
+                    mime-type="application/x-angello-status"
                     ng-click="storyboard.setCurrentStory(story)">
                 <article>
                     <div>
