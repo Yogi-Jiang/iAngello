@@ -17,7 +17,34 @@ var myModule = angular.module("Angello",
         //"angular-storage"
     ]);
 
-myModule.config(function ($routeProvider) {
+myModule.config(function ($routeProvider, $httpProvider, $provide) {
+    //decorators
+    $provide.decorator("$log", function ($delegate) {
+        function timeStamp() {
+            var oNow = new Date();
+            var date = [fillZero(oNow.getMonth() + 1), fillZero(oNow.getDate()), oNow.getFullYear()];
+            var time = [fillZero(oNow.getHours()), fillZero(oNow.getMinutes()), fillZero(oNow.getSeconds())];
+            var suffix = time[0] < 12 ? "AM" : "PM";
+            time[0] > 12 ? time[0] - 12 : time[0];
+            time[0] = time[0] || 12;
+            return date.join("/") + " " + time.join(":") + " " + suffix;
+        }
+
+        function fillZero(n) {
+            return n < 10 ? "0" + n : "" + n;
+        }
+
+        var debugFn = $delegate.debug;
+
+        $delegate.debug = function () {
+            arguments[0] = timeStamp() + " - " + arguments[0];
+            debugFn.apply(null, arguments);
+        };
+        return $delegate;
+    });
+    //interceptors
+    $httpProvider.interceptors.push("loadingInterceptor");
+    //routes
     $routeProvider
         .when("/", {
         templateUrl: "src/angello/storyboard/tmpl/storyboard.html",
@@ -48,3 +75,25 @@ myModule.config(function ($routeProvider) {
 });
 
 myModule.controller("MainCtrl", function () {});
+
+myModule.value("STORY_TYPES",[
+    {name: "Feature"},
+    {name: "Enhancement"},
+    {name: "Bug"},
+    {name: "Spike"}
+]);
+
+myModule.factory("loadingInterceptor", function (loadingService) {
+    var loadingInterceptor = {
+        request: function (config) {
+            loadingService.setLoading(true);
+            return config;
+        },
+        response: function (result) {
+            loadingService.setLoading(false);
+            return result;
+        }
+    };
+
+    return loadingInterceptor;
+});
