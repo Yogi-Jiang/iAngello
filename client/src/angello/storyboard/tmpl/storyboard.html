@@ -9,6 +9,8 @@
                     | filter: {status: status.name}"
                     drag-container="story"
                     mime-type="application/x-angello-status"
+                    drop-container=""
+                    accepts="['application/x-angello-status']"
                     ng-click="storyboard.setCurrentStory(story)">
                 <article>
                     <div>
@@ -22,6 +24,13 @@
                     </div>
                 </article>
             </li>
+            <div class="emptystatus" drop-container=""
+                accepts="['application/x-angello-status]"
+                on-drop="storyboard.finalizeDrop(data)"
+                on-drag-enter="storyboard.changeStatus(data, status)"
+                ng-if="storyboard.isEmptyStatus(status)">
+
+            </div>
         </ul>
     </div>
 </div>
