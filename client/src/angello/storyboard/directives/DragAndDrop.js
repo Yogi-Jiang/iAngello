@@ -67,6 +67,33 @@ angular.module("Angello.Storyboard")
             }
         };
     })
+    .directive("dropTarget", function ($parse) {
+        return {
+            restrict: "A",
+            require: ["^dropContainer", "dropTarget"],
+            controller: "dropTargetController",
+            controllerAs: "dropTarget",
+            link: function ($scope, $element, $attrs, ctrls) {
+                var dropContainer = ctrls[0];
+                var dropTarget = ctrls[1];
+                var anchor = $attrs.dropTarget || "center";
+                var destroy = dropContainer.removeDropTarget.bind(dropContainer, anchor);
+
+                $element.addClass("drop-target drop-target-" + anchor);
+
+                dropTarget.init($element, $scope, {
+                    onDragEnter: $parse($attrs.onDragEnter),
+                    onDragOver: $parse($attrs.onDragOver),
+                    onDragLeave: $parse($attrs.onDragLeave),
+                    onDrop: $parse($attrs.onDrop)
+                });
+
+                dropContainer.addDropTarget(anchor, dropTarget);
+
+                $scope.on("$destroy", destroy);
+            }
+        };
+    })
     .controller("DragContainerController", function ($dragging) {
         var dragContainer = this;
 
@@ -150,7 +177,144 @@ angular.module("Angello.Storyboard")
             if (!angular.isArray(mimeTypes)) mimeTypes = [mimeTypes];
             dropContainer.accepts = mimeTypes;
         };
+
+        dropContainer.updateDragTarget = function (e, skipUpdateTarget) {
+            if (e.originalEvent) e = e.originalEvent;
+            var activeTarget = null;
+            var activeAnchor = null;
+            var minDistanceSq = Number.MAX_VALUE;
+
+            var prevAnchor = dropContainer.activeAnchor;
+            var prevTarget = dropContainer.activeTarget;
+
+            if (!skipUpdateTarget) {
+                angular.forEach(targets, function (dropTarget, anchor) {
+                    var width = dropContainer.el[0].offsetWidth;
+                    var height = dropContainer.el[0].offsetHeight;
+
+                    var anchorX = width / 2;
+                    var anchorY = height / 2;
+
+                    if (anchor.indexOf("left") >= 0) anchorX = 0;
+                    if (anchor.indexOf("top") >= 0) anchorY = 0;
+                    if (anchor.indexOf("right") >= 0) anchorX = width;
+                    if (anchor.indexOf("bottom") >= 0) anchorY = height;
+
+                    var distanceSq = Math.pow(e.offsetX - anchorX, 2) + Math.pow(e.offsetY - anchorY, 2);
+
+                    if (distanceSq < minDistanceSq) {
+                        minDistanceSq = distanceSq;
+                        activeAnchor = anchor;
+                        activeTarget = dropTarget;
+                    }
+                });
+            }
+
+            dropContainer.activeAnchor = activeAnchor;
+            dropContainer.activeTarget = activeTarget;
+
+            var eventData = {
+                $event: e,
+                data: $dragging.getData(),
+                anchor: activeAnchor,
+                target: activeTarget,
+                prevAnchor: prevAnchor,
+                prevTarget: prevTarget
+            };
+
+            if (prevTarget !== activeTarget) {
+                if (prevTarget) {
+                    dropContainer.el.removeClass("drop-container-active-" + prevAnchor);
+                    prevTarget.handleDragLeave(eventData);
+                }
+                if (activeTarget) {
+                    dropContainer.el.addClass("drop-container-active-" + activeAnchor);
+                    activeTarget.handleDragEnter(eventData);
+                }
+            }
+
+            return eventData;
+        };
+
+        dropContainer.handleDragEnter = function (e) {
+            if (e.originalEvent) e = e.originalEvent;
+
+            if (!dropContainer.accepts || dropContainer.accepts.indexOf($dragging.getType()) >= 0) {
+                e.preventDefault();
+            } else {
+                return;
+            }
+
+            var eventData = dropContainer.updateDragTarget(e);
+
+            dropContainer.el.children().css("pointer-events", null);
+            dropContainer.el.addClass("drop-container-active");
+
+            if (dropContainer.callbacks.onDragEnter) {
+                dropContainer.callbacks.onDragEnter(dropContainer.scope, eventData);
+            }
+        };
+
+        dropContainer.handleDragOver = function (e) {
+            if (e.originalEvent) e = e.originalEvent;
+
+            if (!dropContainer.accepts || dropContainer.accepts.indexOf($dragging.getType()) >= 0) {
+                e.preventDefault();
+            } else {
+                return;
+            }
+
+            var eventData = dropContainer.updateDragTarget(e);
+            if (eventData.target) {
+                eventData.target.handleDragOver(eventData);
+            }
+
+            if (dropContainer.callbacks.onDragOver) {
+                dropContainer.callbacks.onDragOver(dropContainer.scope, eventData);
+            }
+        };
+
+        dropContainer.handleDragLeave = function (e) {
+            if (e.originalEvent) e = e.originalEvent;
+
+            var eventData = dropContainer.updateDragTarget(e, true);
+
+            dropContainer.el.children().css("pointer-events", null);
+            dropContainer.el.removeClass("drop-container-active");
+
+            if (dropContainer.callbacks.onDragLeave) {
+                dropContainer.callbacks.onDragLeave(dropContainer.scope, eventData);
+            }
+        };
+
+        dropContainer.handleDragEnd = function (e) {
+            dropContainer.el.children().css("pointer-events", null);
+            dropContainer.el.removeClass("drop-container-active");
+        };
+
+        dropContainer.handleDrop = function (e) {
+            if (e.originalEvent) e = e.originalEvent;
+
+            if (!dropContainer.accepts || dropContainer.accepts.indexOf($dragging.getType()) >= 0) {
+                e.preventDefault();
+            } else {
+                return;
+            }
+
+            var eventData = dropContainer.updateDragTarget(e);
+
+            if (eventData.target) {
+                eventData.target.handleDrop(eventData);
+            }
+
+            if (dropContainer.callbacks.onDrop) {
+                dropContainer.callbacks.onDrop(dropContainer.scope, eventData);
+            }
+
+            dropContainer.handleDragEnd(e);
+        };
     })
+    .controller("DropTargetController", function () {})
     .factory("$dragging", function () {
         var data = null;
         var type = null;
