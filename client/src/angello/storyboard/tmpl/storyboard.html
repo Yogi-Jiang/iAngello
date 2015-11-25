@@ -31,7 +31,7 @@
                 </article>
             </li>
             <div class="emptystatus" drop-container=""
-                accepts="['application/x-angello-status]"
+                accepts="['application/x-angello-status']"
                 on-drop="storyboard.finalizeDrop(data)"
                 on-drag-enter="storyboard.changeStatus(data, status)"
                 ng-if="storyboard.isEmptyStatus(status)">
@@ -47,8 +47,8 @@
             <div class="controls">
                 <label for="inputTitle" class="control-label">*Title</label>
                 <input type="text" id="inputTitle" name="inputTitle" placeholder="Title"
-                    ng-model="storyboard.editedStory.title"   ng-required="true"
-                    ng-minlength="3" ng-maxlength="30" class="form-control" />
+                       ng-model="storyboard.editedStory.title"   ng-required="true"
+                       ng-minlength="3" ng-maxlength="30" class="form-control" />
                 <label for="inputStatus" class="control-label">*Status</label>
                 <select name="inputStatus" id="inputStatus"
                         ng-model="storyboard.editedStory.status" ng-required="true"
@@ -63,14 +63,14 @@
                 </select>
                 <label for="inputDescription" class="control-label">Description</label>
                 <textarea name="inputDescription" id="inputDescription" placeholder="Description" cols="28" rows="4"
-                    ng-model="storyboard.editedStory.description" class="form-control"></textarea>
+                          ng-model="storyboard.editedStory.description" class="form-control"></textarea>
                 <label for="inputCriteria" class="control-label">Acceptance Criteria</label>
                 <textarea name="inputCriteria" id="inputCriteria" placeholder="Acceptance Criteria" cols="28" rows="4"
                           ng-model="storyboard.editedStory.criteria" class="form-control"></textarea>
                 <label for="inputReporter" class="control-label">*Reporter</label>
                 <select name="inputReporter" id="inputReporter"
-                    ng-model="storyboard.editedStory.reporter" ng-required="true"
-                    ng-options="user.id as user.name for user in storyboard.users"  class="form-control" >
+                        ng-model="storyboard.editedStory.reporter" ng-required="true"
+                        ng-options="user.id as user.name for user in storyboard.users"  class="form-control" >
                     <option value="">Please select ...</option>
                 </select>
                 <label for="inputAssignee" class="control-label">*Assignee</label>
@@ -85,12 +85,12 @@
     <hr/>
     <div ng-if="storyboard.currentStory">
         <button class="btn btn-default"
-            ng-click="storyboard.updateCancel()">
+                ng-click="storyboard.updateCancel()">
             Cancel
         </button>
         <button class="btn btn-default pull-right"
-            ng-disabled="!storyboard.detailsForm.$valid"
-            ng-click="storyboard.updateStory()">
+                ng-disabled="!storyboard.detailsForm.$valid"
+                ng-click="storyboard.updateStory()">
             Update Story
         </button>
     </div>

@@ -8,7 +8,7 @@ var myModule = angular.module("Angello",
         //"firebase",
         //"ngMessages",
         "Angello.Common",
-        //"Angello.Dashboard",
+        "Angello.Dashboard",
         //"Angello.Login",
         "Angello.Storyboard",
         "Angello.User",
@@ -18,6 +18,7 @@ var myModule = angular.module("Angello",
     ]);
 
 myModule.config(function ($routeProvider, $httpProvider, $provide) {
+
     //decorators
     $provide.decorator("$log", function ($delegate) {
         function timeStamp() {
@@ -72,6 +73,7 @@ myModule.config(function ($routeProvider, $httpProvider, $provide) {
 //            controllerAs: "storyboard"
 //        })
         .otherwise({ redirectTo: "/"});
+
 });
 
 myModule.controller("MainCtrl", function () {});

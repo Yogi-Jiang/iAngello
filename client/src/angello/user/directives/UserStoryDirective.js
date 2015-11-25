@@ -3,6 +3,7 @@
  */
 angular.module("Angello.User")
     .directive("userstory", function () {
+
         var linker = function (scope, element, attrs) {
             element.mouseover(function () {
                 element.css("opacity", ".9");

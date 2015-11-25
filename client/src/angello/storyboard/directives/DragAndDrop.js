@@ -2,24 +2,98 @@
  * Created by wanjie on 2015/11/22.
  */
 angular.module("Angello.Storyboard")
+    .factory("$dragging", function () {
+        var data = null;
+        var type = null;
+
+        return {
+            getData: function () {
+                return data;
+            },
+            getType: function () {
+                return type;
+            },
+            setData: function (newData) {
+                data = newData;
+                return data;
+            },
+            setType: function (newType) {
+                type = newType;
+                return type;
+            }
+        };
+    })
     .directive("dragContainer", function () {
         return {
             restrict: "A",
             controller: "DragContainerController",
             controllerAs: "dragContainer",
             link: function ($scope, $element, $attrs, dragContainer) {
+
                 dragContainer.init($element);
 
                 $element.on("dragstart", dragContainer.handleDragStart.bind(dragContainer));
                 $element.on("dragend", dragContainer.handleDragEnd.bind(dragContainer));
 
-                $scope.$watch("$attrs.dragContainer", dragContainer.updateDragData.bind(dragContainer));
+                $scope.$watch($attrs.dragContainer, dragContainer.updateDragData.bind(dragContainer));
                 $attrs.$observe("mimeType", dragContainer.updateDragType.bind(dragContainer));
                 $attrs.$set("draggable", true);
             }
         };
     })
+    .controller("DragContainerController", function ($dragging, $parse) {
+
+        var dragContainer = this;
+
+        dragContainer.init = function (el) {
+
+            dragContainer.el = el;
+        };
+
+        dragContainer.handleDragStart = function (e) {
+            if (e.originalEvent) e = e.originalEvent;
+
+            e.dataTransfer.dropEffect = "move";
+            e.dataTransfer.effectAllowed = "move";
+
+            dragContainer.el.addClass("drag-container-active");
+            dragContainer.dragging = true;
+
+            $dragging.setData(dragContainer.data);
+            $dragging.setType(dragContainer.type);
+
+        };
+
+        dragContainer.handleDragEnd = function (e) {
+            if (e.originalEvent) e = e.originalEvent;
+
+            angular.element(e.target).removeClass("drag-active");
+            dragContainer.el.removeClass("drag-container-active");
+            dragContainer.dragging = false;
+
+            $dragging.setData(null);
+            $dragging.setType(null);
+        };
+
+        dragContainer.updateDragData = function (data) {
+            dragContainer.data = data;
+
+            if (dragContainer.dragging) {
+                $dragging.setData(dragContainer.data);
+            }
+        };
+
+        dragContainer.updateDragType = function (type) {
+            dragContainer.type = type || "text/x-drag-and-drop";
+
+            if (dragContainer.dragging) {
+                $dragging.setType(dragContainer.type);
+            }
+        };
+
+    })
     .directive("dropContainer", function ($document, $parse) {
+
         return {
             restrict: "A",
             controller: "DropContainerController",
@@ -53,95 +127,22 @@ angular.module("Angello.Storyboard")
                 * dragenter、dragleave、dragover、drop是接收拖拽的对象身上的事件
                 *
                 * */
-                $element.on("dragenter", handleDragEnter);
                 $element.on("dragover", handleDragOver);
+                $element.on("dragenter", handleDragEnter);
                 $element.on("dragleave", handleDragLeave);
                 $element.on("drop", handleDrop);
 
                 $scope.$watch($attrs.accepts, dropContainer.updateMimeTypes.bind(dropContainer));
                 $document.on("dragend", dragEnd);
 
-                $scope.on("$destroy", function () {
+                $scope.$on("$destroy", function () {
                     $document.off("dragend", dragEnd);
                 });
             }
         };
     })
-    .directive("dropTarget", function ($parse) {
-        return {
-            restrict: "A",
-            require: ["^dropContainer", "dropTarget"],
-            controller: "dropTargetController",
-            controllerAs: "dropTarget",
-            link: function ($scope, $element, $attrs, ctrls) {
-                var dropContainer = ctrls[0];
-                var dropTarget = ctrls[1];
-                var anchor = $attrs.dropTarget || "center";
-                var destroy = dropContainer.removeDropTarget.bind(dropContainer, anchor);
-
-                $element.addClass("drop-target drop-target-" + anchor);
-
-                dropTarget.init($element, $scope, {
-                    onDragEnter: $parse($attrs.onDragEnter),
-                    onDragOver: $parse($attrs.onDragOver),
-                    onDragLeave: $parse($attrs.onDragLeave),
-                    onDrop: $parse($attrs.onDrop)
-                });
-
-                dropContainer.addDropTarget(anchor, dropTarget);
-
-                $scope.on("$destroy", destroy);
-            }
-        };
-    })
-    .controller("DragContainerController", function ($dragging) {
-        var dragContainer = this;
-
-        dragContainer.init = function (el) {
-            dragContainer.el = el;
-        };
-
-        dragContainer.handleDragStart = function (e) {
-            if (e.originalEvent) e = e.originalEvent;
-
-            e.dataTransfer.dropEffect = "move";
-            e.dataTransfer.effectAllowed = "move";
-
-            dragContainer.el.addClass("drag-container-active");
-            dragContainer.dragging = true;
-
-            $dragging.setData(dragContainer.data);
-            $dragging.setType(dragContainer.type);
-        };
-
-        dragContainer.handleDragEnd = function (e) {
-            if (e.originalEvent) e = e.originalEvent;
-
-            angular.element(e.target).removeClass("drag-active");
-            dragContainer.el.removeClass("drag-container-active");
-            dragContainer.dragging = false;
-
-            $dragging.setData(null);
-            $dragging.setType(null);
-        };
-
-        dragContainer.updateDragData = function (data) {
-            dragContainer.data = data;
-
-            if (dragContainer.dragging) {
-                $dragging.setData(dragContainer.data);
-            }
-        };
-
-        dragContainer.updateDragType = function (type) {
-            dragContainer.type = type || "text/x-drag-and-drop";
-
-            if (dragContainer.dragging) {
-                $dragging.setType(dragContainer.type);
-            }
-        };
-    })
     .controller("DropContainerController", function ($dragging) {
+
         var dropContainer = this;
         var targets = {};
         //这是什么鬼
@@ -237,11 +238,14 @@ angular.module("Angello.Storyboard")
         };
 
         dropContainer.handleDragEnter = function (e) {
+
             if (e.originalEvent) e = e.originalEvent;
 
             if (!dropContainer.accepts || dropContainer.accepts.indexOf($dragging.getType()) >= 0) {
+
                 e.preventDefault();
             } else {
+
                 return;
             }
 
@@ -250,9 +254,14 @@ angular.module("Angello.Storyboard")
             dropContainer.el.children().css("pointer-events", null);
             dropContainer.el.addClass("drop-container-active");
 
+
+
+
+            //console.log(eventData.data);
             if (dropContainer.callbacks.onDragEnter) {
                 dropContainer.callbacks.onDragEnter(dropContainer.scope, eventData);
             }
+
         };
 
         dropContainer.handleDragOver = function (e) {
@@ -314,25 +323,70 @@ angular.module("Angello.Storyboard")
             dropContainer.handleDragEnd(e);
         };
     })
-    .controller("DropTargetController", function () {})
-    .factory("$dragging", function () {
-        var data = null;
-        var type = null;
-
+    .directive("dropTarget", function ($parse) {
         return {
-            getData: function () {
-                return data;
-            },
-            getType: function () {
-                return type;
-            },
-            setData: function (data) {
-                data = data;
-                return data;
-            },
-            setType: function (type) {
-                type = type;
-                return type;
+            restrict: "A",
+            require: ["^dropContainer", "dropTarget"],
+            controller: "DropTargetController",
+            controllerAs: "dropTarget",
+            link: function ($scope, $element, $attrs, ctrls) {
+                var dropContainer = ctrls[0];
+                var dropTarget = ctrls[1];
+                var anchor = $attrs.dropTarget || "center";
+                var destroy = dropContainer.removeDropTarget.bind(dropContainer, anchor);
+
+                $element.addClass("drop-target drop-target-" + anchor);
+
+                dropTarget.init($element, $scope, {
+                    onDragEnter: $parse($attrs.onDragEnter),
+                    onDragOver: $parse($attrs.onDragOver),
+                    onDragLeave: $parse($attrs.onDragLeave),
+                    onDrop: $parse($attrs.onDrop)
+                });
+
+                dropContainer.addDropTarget(anchor, dropTarget);
+
+                $scope.$on("$destroy", destroy);
+            }
+        };
+
+    })
+    .controller("DropTargetController", function () {
+        var dropTarget = this;
+
+        dropTarget.init = function (el, scope, callbacks) {
+            dropTarget.el = el;
+            dropTarget.scope = scope;
+            dropTarget.callbacks = callbacks;
+        };
+
+        dropTarget.handleDragEnter = function (eventData) {
+            dropTarget.el.addClass("drop-target-active");
+
+            if (dropTarget.callbacks.onDragEnter) {
+                dropTarget.callbacks.onDragEnter(dropTarget.scope, eventData);
+            }
+        };
+
+        dropTarget.handleDragOver = function (eventData) {
+
+            if (dropTarget.callbacks.onDragOver) {
+                dropTarget.callbacks.onDragOver(dropTarget.scope, eventData);
+            }
+        };
+
+        dropTarget.handleDragLeave = function (eventData) {
+            dropTarget.el.removeClass("drop-target-active");
+
+            if (dropTarget.callbacks.onDragLeave) {
+                dropTarget.callbacks.onDragLeave(dropTarget.scope, eventData);
+            }
+        };
+
+        dropTarget.handleDrop = function (eventData) {
+
+            if (dropTarget.callbacks.onDrop) {
+                dropTarget.callbacks.onDrop(dropTarget.scope, eventData);
             }
         };
     });
