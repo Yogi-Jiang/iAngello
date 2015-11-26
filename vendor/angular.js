@@ -21869,7 +21869,7 @@ forEach(
         This is removed when the checkbox is unchecked.
       </span>
     </file>
-    <file name="animations.css">
+    <file name="animations_old.css">
       .animate-if {
         background:white;
         border:1px solid black;
@@ -22012,7 +22012,7 @@ var ngIfDirective = ['$animate', function($animate) {
     <file name="template2.html">
       Content of template2.html
     </file>
-    <file name="animations.css">
+    <file name="animations_old.css">
       .slide-animate-container {
         position:relative;
         background:white;
@@ -24195,7 +24195,7 @@ var ngPluralizeDirective = ['$locale', '$interpolate', function($locale, $interp
         </ul>
       </div>
     </file>
-    <file name="animations.css">
+    <file name="animations_old.css">
       .example-animate-container {
         background:white;
         border:1px solid black;
@@ -24600,7 +24600,7 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
     <file name="glyphicons.css">
       @import url(../../components/bootstrap-3.1.1/css/bootstrap.css);
     </file>
-    <file name="animations.css">
+    <file name="animations_old.css">
       .animate-show {
         line-height: 20px;
         opacity: 1;
@@ -24765,7 +24765,7 @@ var ngShowDirective = ['$animate', function($animate) {
     <file name="glyphicons.css">
       @import url(../../components/bootstrap-3.1.1/css/bootstrap.css);
     </file>
-    <file name="animations.css">
+    <file name="animations_old.css">
       .animate-hide {
         -webkit-transition: all linear 0.5s;
         transition: all linear 0.5s;
@@ -24952,7 +24952,7 @@ var ngStyleDirective = ngDirective(function(scope, element, attr) {
           $scope.selection = $scope.items[0];
         }]);
     </file>
-    <file name="animations.css">
+    <file name="animations_old.css">
       .animate-switch-container {
         position:relative;
         background:white;

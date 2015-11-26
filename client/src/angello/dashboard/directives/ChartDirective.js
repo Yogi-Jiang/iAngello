@@ -25,7 +25,30 @@ angular.module("Angello.Dashboard")
         };
 
         var linker = function (scope, element, attrs) {
+            scope.$watch("sourceArray", function () {
+                scope.data = parseDataForCharts(
+                    scope.sourceArray,
+                    attrs["sourceProp"],
+                    scope.referenceArray,
+                    attrs["referenceProp"]
+                );
 
+                if (element.is(":visible")) {
+                    $.plot(element, [scope.data], {
+                        series: {
+                            bars: {
+                                show: true,
+                                barWidth: .6,
+                                align: "center"
+                            }
+                        },
+                        xaxis: {
+                            mode: "categories",
+                            tickLength: 0
+                        }
+                    });
+                }
+            });
         };
         var controller = function ($scope) {
 
@@ -33,6 +56,10 @@ angular.module("Angello.Dashboard")
         return {
             restrict: "A",
             controller: controller,
-            link: linker
+            link: linker,
+            scope: {
+                sourceArray: "=",
+                referenceArray: "="
+            }
         }
     });

@@ -150,4 +150,10 @@ angular.module("Angello.Storyboard")
             }
         ];
 
+        storyboard.detailsVisible = true;
+
+        storyboard.setDetailsVisible = function (visible) {
+            storyboard.detailsVisible = visible;
+        };
+
     });

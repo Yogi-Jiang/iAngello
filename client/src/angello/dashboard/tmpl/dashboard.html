@@ -2,11 +2,15 @@
     <h3>User Stories By Status</h3>
     <hr/>
     <div class="chart-container">
-        <div chart class="chart-placeholder"></div>
+        <div chart class="chart-placeholder"
+            source-array="dashboard.stories" source-prop="status"
+            reference-array="dashboard.statuses" reference-prop="name"></div>
     </div>
     <h3>User Stories By Type</h3>
     <hr/>
     <div class="chart-container">
-        <div chart class="chart-placeholder"></div>
+        <div chart class="chart-placeholder"
+             source-array="dashboard.stories" source-prop="type"
+             reference-array="dashboard.types" reference-prop="name"></div>
     </div>
 </div>

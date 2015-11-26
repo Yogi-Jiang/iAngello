@@ -4,7 +4,7 @@
 var myModule = angular.module("Angello",
     [
         "ngRoute",
-        //"ngAnimate",
+        "ngAnimate",
         //"firebase",
         //"ngMessages",
         "Angello.Common",
