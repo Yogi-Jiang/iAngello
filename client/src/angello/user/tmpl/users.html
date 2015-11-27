@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<table>
+    <tr ng-repeat="user in users.users">
+        <td>
+            <button type="button" class="btn btn-link"
+                ng-click="users.removeUser(user.id)">Remove</button>
+            <a class="btn btn-link" href="#/users/{{user.id}}">View</a>
+        </td>
+    </tr>
+</table>

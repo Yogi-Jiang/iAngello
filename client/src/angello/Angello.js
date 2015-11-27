@@ -52,11 +52,35 @@ myModule.config(function ($routeProvider, $httpProvider, $provide) {
         controller: "StoryboardCtrl",
         controllerAs: "storyboard"
         })
-//        .when("/dashboard", {
-//            templateUrl: "src/angello/dashboard/tmpl/dashboard.html",
-//            controller: "LoginCtrl",
-//            controllerAs: "login"
-//        })
+        .when("/dashboard", {
+            templateUrl: "src/angello/dashboard/tmpl/dashboard.html",
+            controller: "DashboardCtrl",
+            controllerAs: "dashboard"
+        })
+        .when("/users", {
+            templateUrl: "src/angello/user/tmpl/users.html",
+            controller: "UsersCtrl",
+            controllerAs: "users"
+        })
+        .when("/users/:userId", {
+            templateUrl: "src/angello/user/tmpl/user.html",
+            controller: "UserCtrl",
+            controllerAs: "myUser",
+            resolve: {
+                user: function ($route, $routeParams, UsersModel) {
+                    var userId = $route.current.params["userId"] || $routeParams["userId"];
+                    return UsersModel.fetch(userId);
+                },
+                stories: function (StoriesModel) {
+                    return StoriesModel.stories;
+                }
+            }
+        })
+        //.when("/dashboard", {
+        //    templateUrl: "src/angello/dashboard/tmpl/dashboard.html",
+        //    controller: "LoginCtrl",
+        //    controllerAs: "login"
+        //})
 //        .when("/users", {
 //            templateUrl: "src/angello/user/tmpl/users.html",
 //            controller: "UsersCtrl",
