@@ -5,19 +5,14 @@ var myModule = angular.module("Angello",
     [
         "ngRoute",
         "ngAnimate",
-        //"firebase",
-        //"ngMessages",
+        "ngMessages",
         "Angello.Common",
         "Angello.Dashboard",
-        //"Angello.Login",
         "Angello.Storyboard",
-        "Angello.User",
-        //"auth0",
-        //"angular-jwt",
-        //"angular-storage"
+        "Angello.User"
     ]);
 
-myModule.config(function ($routeProvider, $httpProvider, $provide) {
+myModule.config(function ($routeProvider, $provide) {
 
     //decorators
     $provide.decorator("$log", function ($delegate) {
@@ -43,8 +38,7 @@ myModule.config(function ($routeProvider, $httpProvider, $provide) {
         };
         return $delegate;
     });
-    //interceptors
-    $httpProvider.interceptors.push("loadingInterceptor");
+
     //routes
     $routeProvider
         .when("/", {
@@ -76,50 +70,21 @@ myModule.config(function ($routeProvider, $httpProvider, $provide) {
                 }
             }
         })
-        //.when("/dashboard", {
-        //    templateUrl: "src/angello/dashboard/tmpl/dashboard.html",
-        //    controller: "LoginCtrl",
-        //    controllerAs: "login"
-        //})
-//        .when("/users", {
-//            templateUrl: "src/angello/user/tmpl/users.html",
-//            controller: "UsersCtrl",
-//            controllerAs: "users"
-//        })
-//        .when("/users/:userId", {
-//            templateUrl: "src/angello/user/tmpl/user.html",
-//            controller: "UserCtrl",
-//            controllerAs: "myUser"
-//        })
-//        .when("/login", {
-//            templateUrl: "src/angello/login/tmpl/login.html",
-//            controller: "StoryboardCtrl",
-//            controllerAs: "storyboard"
-//        })
         .otherwise({ redirectTo: "/"});
 
 });
 
-myModule.controller("MainCtrl", function () {});
-
 myModule.value("STORY_TYPES",[
-    {name: "Feature"},
-    {name: "Enhancement"},
-    {name: "Bug"},
-    {name: "Spike"}
+    {name: "新功能", sClass: "Feature"},
+    {name: "改善", sClass: "Enhancement"},
+    {name: "Bug修复", sClass: "Bug"}
 ]);
 
-myModule.factory("loadingInterceptor", function (loadingService) {
-    var loadingInterceptor = {
-        request: function (config) {
-            loadingService.setLoading(true);
-            return config;
-        },
-        response: function (result) {
-            loadingService.setLoading(false);
-            return result;
-        }
-    };
+myModule.value("STORY_STATUSES",[
+    {name: '还没做的'},
+    {name: '正在做的'},
+    {name: '等待评审的'},
+    {name: '等待测试的'},
+    {name: '已经做完的'}
+]);
 
-    return loadingInterceptor;
-});

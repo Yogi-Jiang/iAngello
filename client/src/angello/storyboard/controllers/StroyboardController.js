@@ -2,7 +2,7 @@
  * Created by wanjie on 2015/11/17.
  */
 angular.module("Angello.Storyboard")
-    .controller("StoryboardCtrl", function (STORY_TYPES, StoriesModel, UsersModel) {//, StoriesModel, $log
+    .controller("StoryboardCtrl", function (STORY_TYPES, STORY_STATUSES, StoriesModel, UsersModel) {//, StoriesModel, $log
         var storyboard = this;
 
         storyboard.currentStory = null;
@@ -67,6 +67,12 @@ angular.module("Angello.Storyboard")
         storyboard.createStory = function () {
             var newStory = angular.copy(storyboard.editedStory);
             newStory.id = ID();
+            for (var i = 0; i < storyboard.types.length; i++) {
+                if (storyboard.types[i].name == newStory.type) {
+                    newStory.sClass = storyboard.types[i].sClass;
+                    break;
+                }
+            }
             storyboard.stories.push(newStory);
             storyboard.resetForm();
         };
@@ -98,13 +104,7 @@ angular.module("Angello.Storyboard")
 
         storyboard.stories = StoriesModel.stories;
 
-        storyboard.statuses = [
-            {name: 'To Do'},
-            {name: 'In Progress'},
-            {name: 'Code Review'},
-            {name: 'QA Review'},
-            {name: 'Verified'}
-        ];
+        storyboard.statuses = STORY_STATUSES;
 
         storyboard.types = STORY_TYPES;
 
@@ -116,4 +116,8 @@ angular.module("Angello.Storyboard")
             storyboard.detailsVisible = visible;
         };
 
+        storyboard.showMessages = function (field) {
+            return storyboard.detailsForm[field].$touched
+                 && storyboard.detailsForm[field].$invalid;
+        };
     });

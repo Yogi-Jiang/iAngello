@@ -7,11 +7,11 @@ angular.module("Angello.Common")
         users.users = [
             {
                 id: "1",
-                name: "yogi.jiang"
+                name: "姜杨军"
             },
             {
                 id: "2",
-                name: "someone"
+                name: "张三"
             }
         ];
 

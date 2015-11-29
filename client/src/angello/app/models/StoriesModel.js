@@ -36,33 +36,36 @@ angular.module("Angello.Common")
         service.stories = [
             {
                 "assignee": "1",
-                "criteria": "It tests!",
-                "description": "This is a test",
+                "criteria": "活动页写完!",
+                "description": "这是个测试",
                 "id": "1",
                 "reporter": "2",
-                "status": "To Do",
-                "title": "First Story",
-                "type": "Spike"
+                "status": "还没做的",
+                "title": "第一个故事",
+                "type": "新功能",
+                "sClass": "Feature"
             },
             {
                 "assignee": "2",
-                "criteria": "It works!",
-                "description": "testing something",
+                "criteria": "好了!",
+                "description": "测试一些东西",
                 "id": "2",
                 "reporter": "1",
-                "status": "In Progress",
-                "title": "Second Story",
-                "type": "Enhancement"
+                "status": "正在做的",
+                "title": "第二个故事",
+                "type": "改善",
+                "sClass": "Enhancement"
             },
             {
                 "assignee": "3",
-                "criteria": "It works!",
-                "description": "testing something",
+                "criteria": "管用！",
+                "description": "继续测试",
                 "id": "3",
                 "reporter": "3",
-                "status": "In Progress",
-                "title": "Third Story",
-                "type": "Enhancement"
+                "status": "正在做的",
+                "title": "第三个故事",
+                "type": "Bug修复",
+                "sClass": "Bug"
             }
         ];
     });

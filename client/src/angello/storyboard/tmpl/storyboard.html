@@ -24,7 +24,7 @@
                             ng-click="storyboard.deleteStory(story.id)">×</button>
                         <p class="title">{{story.title}}</p>
                     </div>
-                    <div class="type-bar {{story.type}}"></div>
+                    <div class="type-bar {{story.sClass}}"></div>
                     <div>
                         <p>{{story.description}}</p>
                     </div>
@@ -58,43 +58,56 @@
         </div>
     </div>
     <div ng-if="storyboard.detailsVisible" class="my-fade-animation">
-        <h3>Card Details</h3>
+        <h3>故事详细信息</h3>
         <form name="storyboard.detailsForm">
             <div class="form-group">
                 <div class="controls">
-                    <label for="inputTitle" class="control-label">*Title</label>
-                    <input type="text" id="inputTitle" name="inputTitle" placeholder="Title"
+                    <label for="inputTitle" class="control-label">*标题</label>
+                    <input type="text" id="inputTitle" name="inputTitle" placeholder="标题"
                            ng-model="storyboard.editedStory.title"   ng-required="true"
                            ng-minlength="3" ng-maxlength="30" class="form-control" />
-                    <label for="inputStatus" class="control-label">*Status</label>
+                    <div class="alert alert-warning"
+                        ng-messages="storyboard.detailsForm.inputTitle.$error"
+                        ng-if="storyboard.showMessages('inputTitle')">
+                        <div ng-message="required">
+                            <small>标题不能为空!</small>
+                        </div>
+                        <div ng-message="minlength">
+                            <small>标题太短了!</small>
+                        </div>
+                        <div ng-message="maxlength">
+                            <small>标题太长了!</small>
+                        </div>
+                    </div>
+                    <label for="inputStatus" class="control-label">*阶段</label>
                     <select name="inputStatus" id="inputStatus"
                             ng-model="storyboard.editedStory.status" ng-required="true"
                             ng-options="status.name as status.name for status in storyboard.statuses"  class="form-control" >
-                        <option value="">Select Status</option>
+                        <option value="">请选择阶段</option>
                     </select>
-                    <label for="inputType" class="control-label">*Type</label>
+                    <label for="inputType" class="control-label">*类型</label>
                     <select name="inputType" id="inputType"
                             ng-model="storyboard.editedStory.type" ng-required="true"
                             ng-options="type.name as type.name for type in storyboard.types"  class="form-control" >
-                        <option value="">Select Type</option>
+                        <option value="">请选择类型</option>
                     </select>
-                    <label for="inputDescription" class="control-label">Description</label>
-                <textarea name="inputDescription" id="inputDescription" placeholder="Description" cols="28" rows="4"
+                    <label for="inputDescription" class="control-label">描述</label>
+                <textarea name="inputDescription" id="inputDescription" placeholder="请输入描述" cols="28" rows="4"
                           ng-model="storyboard.editedStory.description" class="form-control"></textarea>
-                    <label for="inputCriteria" class="control-label">Acceptance Criteria</label>
-                <textarea name="inputCriteria" id="inputCriteria" placeholder="Acceptance Criteria" cols="28" rows="4"
+                    <label for="inputCriteria" class="control-label">进入下一阶段的标准</label>
+                <textarea name="inputCriteria" id="inputCriteria" placeholder="请输入进入下一阶段的标准" cols="28" rows="4"
                           ng-model="storyboard.editedStory.criteria" class="form-control"></textarea>
-                    <label for="inputReporter" class="control-label">*Reporter</label>
+                    <label for="inputReporter" class="control-label">*报告人</label>
                     <select name="inputReporter" id="inputReporter"
                             ng-model="storyboard.editedStory.reporter" ng-required="true"
                             ng-options="user.id as user.name for user in storyboard.users"  class="form-control" >
-                        <option value="">Please select ...</option>
+                        <option value="">请选择 ...</option>
                     </select>
-                    <label for="inputAssignee" class="control-label">*Assignee</label>
+                    <label for="inputAssignee" class="control-label">*受托人</label>
                     <select name="inputAssignee" id="inputAssignee"
                             ng-model="storyboard.editedStory.assignee" ng-required="true"
                             ng-options="user.id as user.name for user in storyboard.users"  class="form-control" >
-                        <option value="">Please select ...</option>
+                        <option value="">请选择 ...</option>
                     </select>
                 </div>
             </div>
@@ -103,19 +116,19 @@
         <div ng-if="storyboard.currentStory">
             <button class="btn btn-default"
                     ng-click="storyboard.updateCancel()">
-                Cancel
+                取消
             </button>
             <button class="btn btn-default pull-right"
-                    ng-disabled="!storyboard.detailsForm.$valid"
+                    ng-disabled="storyboard.detailsForm.$invalid"
                     ng-click="storyboard.updateStory()">
-                Update Story
+                更新故事
             </button>
         </div>
         <div ng-if="!storyboard.currentStory">
             <button class="btn btn-default pull-right"
                     ng-disabled="!storyboard.detailsForm.$valid"
                     ng-click="storyboard.createStory()">
-                Create Story
+                创建故事
             </button>
         </div>
     </div>

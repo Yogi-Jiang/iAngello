@@ -40,6 +40,10 @@ body.loading .modal {
     margin: 15px;
 }
 
+.navbar-brand h2{
+    margin-top: 0;
+}
+
 .list {
     list-style-type: none;
     float: left;
@@ -200,7 +204,7 @@ form.ng-dirty input.ng-valid {
 }
 
 .Feature {
-    background: #F9F7ED;
+    background: #C3D9FF;
 }
 
 .Enhancement {
@@ -212,7 +216,7 @@ form.ng-dirty input.ng-valid {
 }
 
 .Spike {
-    background: #C3D9FF;
+    background: #F9F7ED;
 }
 
 .edit input {
