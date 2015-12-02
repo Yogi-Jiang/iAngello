@@ -195,12 +195,14 @@ body.loading .modal {
     line-height: 1.2em;
 }
 
-form.ng-dirty input.ng-invalid {
-    border: 1px solid #B02B2C;
-}
+
 
 form.ng-dirty input.ng-valid {
     border: 1px solid #6BBA70;
+}
+
+form.ng-dirty input.ng-invalid, form.ng-dirty input.ng-invalid-email {
+    border: 1px solid #B02B2C;
 }
 
 .Feature {

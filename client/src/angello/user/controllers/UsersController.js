@@ -18,9 +18,14 @@ angular.module("Angello.User")
             users.newUserForm.$setUntouched();
         };
 
+        function ID() {
+            return "_" + Math.random.toString().substring(2,9);
+        }
         users.addUser = function () {
+            users.newUser.id = ID();
             UsersModel.users.push(users.newUser);
             resetForm();
+            users.newUser = {name: "", email: ""};
         };
 
         users.updateUser = function (id, user) {
@@ -29,7 +34,7 @@ angular.module("Angello.User")
 
         users.removeUser = function (id) {
             for (var i = 0, len = UsersModel.users.length; i < len; i++) {
-                if (UsersModel.users[i].id = id) {
+                if (UsersModel.users[i].id == id) {
                     UsersModel.users.splice(i, 1);
                 }
             }
