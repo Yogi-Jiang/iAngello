@@ -9,9 +9,7 @@ var myModule = angular.module("Angello",
         "Angello.Common",
         "Angello.Dashboard",
         "Angello.Storyboard",
-        "Angello.User",
-        "angularModalService",
-        "Angello.Modal"
+        "Angello.User"
     ]);
 
 myModule.config(function ($routeProvider, $provide) {
