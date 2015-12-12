@@ -1,4 +1,4 @@
-# Angello故事板
+# Angello项目板
 
 Angello,是一个用AngularJS写的Web App.
 
